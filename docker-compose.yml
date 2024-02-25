@@ -1,0 +1,66 @@
+version: '3.4'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment: 
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes: 
+      - mysql_data:/var/lib/mysql
+    networks: 
+      - backend-network
+    restart: always
+
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - 80:80
+    environment:
+      - WP_DATABASE_NAME=${MYSQL_DATABASE}
+      - WP_DATABASE_USER=${MYSQL_USER}
+      - WP_DATABASE_PASSWORD=${MYSQL_PASSWORD}
+      - WP_DATABASE_HOST=mysql
+    volumes:
+      - wordpress_data:/bitnami/wordpress
+    networks: 
+      - backend-network
+      - frontend-network
+    restart: always
+    depends_on: 
+      - mysql
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    ports:
+      - 8080:80
+    environment: 
+      - PMA_HOST=mysql
+    networks: 
+      - backend-network
+      - frontend-network
+    restart: always
+    depends_on: 
+      - mysql
+
+  # https-portal:
+  #   image: steveltn/https-portal:1
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   restart: always
+  #   environment:
+  #     DOMAINS: '${DOMAIN} -> http://wordpress:80'
+  #     STAGE: 'production'
+  #   networks:
+  #     - frontend-network
+
+volumes:
+  mysql_data:
+  wordpress_data:
+
+networks: 
+  backend-network:
+  frontend-network:
