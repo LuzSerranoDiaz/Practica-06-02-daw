@@ -93,10 +93,12 @@ services:
       - frontend-network
 ```
 * Image: steveltn/https-portal:1, indica la imagen que se usara para este contenedor y su versión.
-* Ports:
-* Enviroment: indica las variables y distintos valores que necesitará la aplicación.
-* Networks: indica a que conexión a la que pertenece este contenedor.
+* Ports: indica los puertos por los que se puede acceder al contenedor en especifico.
 * Restart: indica las acciones que tomar al parar o reiniciar el contenedor, al poner `always` siempre se reinicia si se paró anteriormente.
+* Enviroment: indica las variables y distintos valores que necesitará la aplicación.
+  * DOMAINS indica el dominio por el que se va acceder y el contenedor al que redirije.
+  * STAGE indica en que etapa o modo se encuentra el servicio.
+* Networks: indica a que conexión a la que pertenece este contenedor.
 ```yml
 
 volumes:
